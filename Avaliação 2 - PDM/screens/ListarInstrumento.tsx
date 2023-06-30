@@ -3,7 +3,7 @@ import { ActivityIndicator, SafeAreaView, View, FlatList, Text, StatusBar, Press
 import { auth, firestore } from "../firebase";
 import meuestilo from "../meuestilo";
 import { Instrumento } from "../model/Instrumento";
-const ListarInstrumentos = () => {
+const ListarInstrumento = () => {
   const [loading, setLoading] = useState(true); // Set loading to true
   const [instrumentos, setInstrumentos] = useState<Instrumento[]>([]); // Initial empty array
   const instrumentoRef =
@@ -38,16 +38,15 @@ const ListarInstrumentos = () => {
       {/* <View style={meuestilo.item} key={item.id}> */}
       <Pressable
         style={({ pressed }) => [{ backgroundColor: pressed ? '#f1f1f1' : 'transparent' }, meuestilo.title]}
-        onLongPress={() => { }}
-        onPress={() => { }}
+        
       >
-
-
         <View style={meuestilo.alinhamentoLinha}>
-          <Image style={{ height: 70, width: 70, borderRadius: 50 }} source={{ uri: item.urlfoto }} />
+          <Image style={{ height: 80, width: 80, borderRadius: 50 }} source={{ uri: item.urlfoto }} />
           <View style={meuestilo.alinhamentoColuna}>
-            <Text style={meuestilo.itemStylefirebase}>Nome: {item.tipo}</Text>
-            <Text style={meuestilo.itemStylefirebase}> Raça: {item.cor}</Text>
+          <Text style={meuestilo.itemStylefirebase}>ID: {item.id}</Text>
+            <Text style={meuestilo.itemStylefirebase}>Tipo: {item.tipo}</Text>
+            <Text style={meuestilo.itemStylefirebase}>Cor: {item.cor}</Text>
+            <Text style={meuestilo.itemStylefirebase}>Data de Fabricação: {item.datafabricacao}</Text>
             {/* fecha alinhamento colunas */}
           </View>
           {/* fecha alinhamento linhas */}
@@ -67,4 +66,4 @@ const ListarInstrumentos = () => {
     </SafeAreaView>
   );
 };
-export default ListarInstrumentos;
+export default ListarInstrumento;
