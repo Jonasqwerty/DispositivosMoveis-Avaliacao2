@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import ManterInstrumento from './ManterInstrumento';
 import ListarInstrumento from './ListarInstrumento';
+import Sair from './SairScreen';
 
 function ListarScreen({ navigation }) {
   return (
@@ -15,6 +16,13 @@ function ManterScreen({ navigation }) {
    <ManterInstrumento></ManterInstrumento>
   );
 }
+
+function SairScreen({ navigation }) {
+  return (
+      <Sair></Sair>
+  );
+}
+
 const Drawer = createDrawerNavigator();
 
 export default function Menu() {
@@ -23,7 +31,7 @@ export default function Menu() {
       <Drawer.Navigator initialRouteName="Manter Instrumento">
         <Drawer.Screen name="Manter Instrumento" component={ManterScreen} />
         <Drawer.Screen name="Listar Instrumento" component={ListarScreen} />
-        
+        <Drawer.Screen name="Sair" component={SairScreen} />
       </Drawer.Navigator>
     
   );
