@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
-import {  KeyboardAvoidingView, Alert, Text,  Pressable, Modal, TextInput,  TouchableOpacity,  View, Image} from "react-native";
+import {  KeyboardAvoidingView, StyleSheet, Alert, Text,  Pressable, Modal, TextInput,  TouchableOpacity,  View, Image, Button} from "react-native";
 import { auth, firestore, storage } from "../firebase";
 import {uploadBytes} from "firebase/storage"; //access the storage databaSse
 import meuestilo from "../meuestilo";
@@ -13,9 +13,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const ManterInstrumento = () => {
   const [formInstrumento, setFormInstrumento] = useState<Partial<Instrumento>>({})
-  const instrumentoRef = 
-  firestore.collection('Usuario').doc(auth.currentUser?.uid)
-  .collection('Instrumento')
+  const instrumentoRef = firestore.collection('Usuario').doc(auth.currentUser?.uid).collection('Instrumento')
+  const [formData, setFormData] = useState<Partial<Instrumento>>({})
 
   const [pickedImagePath, setPickedImagePath]=useState('')
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -43,6 +42,7 @@ const ManterInstrumento = () => {
   const cancelar = async() => {
     limparFormulario()
   }
+
   const salvar = async() => {
     const instrumentoRefComId = instrumentoRef.doc();
     const instrumento= new Instrumento(formInstrumento);
@@ -164,7 +164,7 @@ const ManterInstrumento = () => {
     // <KeyboardAvoidingView 
     // style={meuestilo.container}
     // behavior="padding">
-      < style={meuestilo.inputContainer}>
+      <View style={meuestilo.inputContainer}>
 
       <Pressable onPress={() => escolhefoto()}>
         <View style={meuestilo.imageContainer}>
@@ -189,6 +189,20 @@ const ManterInstrumento = () => {
           onChangeText={val => setFormInstrumento({ ...formInstrumento, cor: val })}
           style={meuestilo.input}
         />
+
+        <Button style={styles.calenderio} title="calendário" onPress={showDatePicker} />
+              
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+              />
+
+        <TextInput style={styles.input}
+             placeholder="Data de Fabricação"
+             value={dataString}
+             editable={false}/>
         
       {/* </View>
 
@@ -211,3 +225,18 @@ const ManterInstrumento = () => {
 
 export default ManterInstrumento;
 
+const styles = StyleSheet.create({
+  input: {
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 5,
+    marginBottom: 50,
+    color: 'black',
+  },
+
+  calendario:{
+    marginTop: 50,
+  }
+})
