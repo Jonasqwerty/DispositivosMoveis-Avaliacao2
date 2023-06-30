@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/core'
-import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState, Component } from 'react'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Button } from 'react-native'
 import { auth, firestore } from '../firebase'
 import { Usuario } from '../model/Usuario'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const Registro = () => {
   const [formUsuario, setFormUsuario]=
@@ -11,6 +12,9 @@ const Registro = () => {
   const refUsuario=firestore.collection("Usuario")
 
   const navigation = useNavigation()
+
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [dataString, setDataString]=useState('');
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -52,20 +56,26 @@ const Registro = () => {
     navigation.replace("Login")
   }
 
-//   const handleLogin = () => {
-//     auth
-//       .signInWithEmailAndPassword(email, password)
-//       .then(userCredentials => {
-//         const user = userCredentials.user;
-//         console.log('Logged in with:', user.email);
-//       })
-//       .catch(error => alert(error.message))
-//   }
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    const formattedDate = date.getDate().toString().padStart(2, "0") + "/" + ((date.getMonth()+1).toString().padStart(2, "0"))  + "/" + date.getFullYear();
+    console.log(formattedDate)
+    setDataString(formattedDate)
+    setFormInstrumento({...formInstrumento, datafabricacao:formattedDate})
+    hideDatePicker();
+  };
 
   return (
     <KeyboardAvoidingView
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    style={styles.container}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -95,15 +105,21 @@ const Registro = () => {
           })}
           style={styles.input}
         />
-          <TextInput
-          placeholder="Data Nascimento"
-          value={formUsuario.datanascimento}
-          onChangeText={datanascimento => setFormUsuario({
-            ...formUsuario,
-            datanascimento: datanascimento
-          })}
-          style={styles.input}
-        />
+          <Button title="Calendário" onPress={showDatePicker} />
+              
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+              />
+
+          <TextInput style={styles.input}
+             placeholder="Data de Nascimento"
+             value={dataString}
+             editable={false}/>
+
+          
        
       </View>
 
@@ -144,6 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+    color: 'black',
   },
   buttonContainer: {
     width: '60%',
